@@ -782,35 +782,41 @@ h2 {
     100% { transform: rotateX(360deg); }
 }
 
-/* Taco Centipede Animation */
-.marching-people {
+/* Cosmic Drift Animation */
+.cosmic-stars {
     position: absolute;
-    width: 15px;
-    height: 15px;
-    background: #FF8C00;
+    width: 3px;
+    height: 3px;
+    background: #FFD700;
     border-radius: 50%;
-    animation: march 3s linear infinite;
+    animation: twinkle 2s ease-in-out infinite;
+    box-shadow: 
+        20px 10px 0 #FFF,
+        40px 25px 0 #FFD700,
+        60px 15px 0 #FFF,
+        80px 30px 0 #FFD700;
 }
 
-.taco-trail {
+.drift-trail {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    width: 20px;
-    height: 20px;
-    background: linear-gradient(45deg, #FFD700, #FFA500);
-    border-radius: 50%;
-    animation: tacoFloat 2s ease-in-out infinite;
+    width: 30px;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #00BFFF, #FFD700);
+    border-radius: 2px;
+    animation: drift 3s linear infinite;
 }
 
-@keyframes march {
-    0% { transform: translateX(-20px); }
-    100% { transform: translateX(200px); }
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
 }
 
-@keyframes tacoFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+@keyframes drift {
+    0% { transform: translateX(-30px) scaleX(0.5); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateX(150px) scaleX(2); opacity: 0; }
 }
 
 /* Fullscreen Game Overlay */

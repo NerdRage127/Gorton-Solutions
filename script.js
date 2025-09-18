@@ -371,9 +371,6 @@ function openGame(gameType) {
             case 'coupon-slots':
                 initializeCouponSlotsGame();
                 break;
-            case 'taco-centipede':
-                initializeTacoCentipedeGame();
-                break;
         }
     }
 }
@@ -477,6 +474,13 @@ function initializeOrchardWormGame() {
         if (head.x === fruit.x && head.y === fruit.y) {
             score += 10;
             scoreEl.textContent = score;
+            
+            // Check if player reached 10 apples (100 points)
+            if (score >= 100 && score < 110) {
+                // Trigger coupon modal
+                setTimeout(() => showCoreChaser10PercentCoupon(), 500);
+            }
+            
             randomFruit();
         } else {
             worm.pop();
@@ -564,6 +568,39 @@ function initializeOrchardWormGame() {
     resetGame();
 }
 
+function showCoreChaser10PercentCoupon() {
+    // Create a simple modal for the coupon
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
+        align-items: center; justify-content: center;
+    `;
+    
+    const couponCode = 'CORE10-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    
+    modal.innerHTML = `
+        <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 400px;">
+            <h3 style="color: #2c5aa0; margin-top: 0;">🍎 Amazing! 🍎</h3>
+            <p>You collected 10 apples! Here's your reward:</p>
+            <p><strong>10% OFF</strong> coupon!</p>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+                <strong style="font-size: 1.2rem; color: #28a745;">${couponCode}</strong>
+            </div>
+            <button onclick="navigator.clipboard.writeText('${couponCode}').then(() => alert('Coupon code copied!'))" 
+                    style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-right: 1rem; cursor: pointer;">
+                Copy Code
+            </button>
+            <button onclick="this.parentElement.parentElement.remove()" 
+                    style="background: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                Close
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
 // Coupon Slots Game
 function initializeCouponSlotsGame() {
     const spinBtn = document.getElementById('spin-btn');
@@ -575,39 +612,94 @@ function initializeCouponSlotsGame() {
     
     if (!spinBtn || !coinsLeftEl || !resultEl) return;
     
-    let coinsLeft = 3;
-    const symbols = ['🍎', '🍊', '🍌', '🍇', '🔔', '💎', '🍒'];
+    // Get or initialize coins left from localStorage
+    let coinsLeft = parseInt(localStorage.getItem('coupon-slots-coins') || '3');
+    const symbols = ['🍎', '🍒', '⭐'];
     
     function updateDisplay() {
         coinsLeftEl.textContent = coinsLeft;
+        localStorage.setItem('coupon-slots-coins', coinsLeft.toString());
+        
         if (coinsLeft <= 0) {
             spinBtn.disabled = true;
             spinBtn.textContent = 'No Coins Left';
             if (!resultEl.textContent.includes('WIN')) {
                 resultEl.textContent = 'Better luck next time!';
             }
+        } else {
+            spinBtn.textContent = `🪙 SPIN (${coinsLeft} Coin${coinsLeft !== 1 ? 's' : ''} Left)`;
         }
+    }
+    
+    function showCouponModal() {
+        // Create a simple modal for the coupon
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
+            align-items: center; justify-content: center;
+        `;
+        
+        const couponCode = 'DEMO10-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+        
+        modal.innerHTML = `
+            <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 400px;">
+                <h3 style="color: #2c5aa0; margin-top: 0;">🎉 Congratulations! 🎉</h3>
+                <p>You've won a <strong>10% OFF</strong> coupon!</p>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+                    <strong style="font-size: 1.2rem; color: #28a745;">${couponCode}</strong>
+                </div>
+                <button onclick="navigator.clipboard.writeText('${couponCode}').then(() => alert('Coupon code copied!'))" 
+                        style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-right: 1rem; cursor: pointer;">
+                    Copy Code
+                </button>
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        style="background: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                    Close
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
     }
     
     function spin() {
         if (coinsLeft <= 0) return;
         
+        const isLastCoin = coinsLeft === 1;
         coinsLeft--;
         resultEl.textContent = 'Spinning...';
         
-        // Animate slots
+        // Animate slots with longer sequence (~5 seconds)
         let spins = 0;
-        const maxSpins = 10;
+        const maxSpins = 50; // Longer animation
         
         const spinInterval = setInterval(() => {
-            slot1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            slot2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            slot3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            if (!isLastCoin) {
+                // Regular random spin
+                slot1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                slot2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                slot3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            } else {
+                // Last coin - gradually move toward a match
+                if (spins < maxSpins - 10) {
+                    slot1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    slot2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    slot3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                } else {
+                    // Force a match in the last few spins
+                    const winSymbol = symbols[0]; // 🍎
+                    slot1.textContent = winSymbol;
+                    slot2.textContent = winSymbol;
+                    slot3.textContent = winSymbol;
+                }
+            }
             
             spins++;
             if (spins >= maxSpins) {
                 clearInterval(spinInterval);
-                checkResult();
+                // Stop reels in sequence
+                setTimeout(() => checkResult(), 200);
             }
         }, 100);
         
@@ -620,13 +712,16 @@ function initializeCouponSlotsGame() {
         const symbol3 = slot3.textContent;
         
         if (symbol1 === symbol2 && symbol2 === symbol3) {
-            resultEl.innerHTML = '🎉 <strong>JACKPOT!</strong> You won a 25% OFF coupon! 🎉';
+            resultEl.innerHTML = '🎉 <strong>WIN!</strong> 10% OFF Coupon! 🎉';
             resultEl.style.color = '#FFD700';
             spinBtn.disabled = true;
             spinBtn.textContent = 'You Won!';
-        } else if (symbol1 === symbol2 || symbol2 === symbol3 || symbol1 === symbol3) {
-            resultEl.innerHTML = '✨ Two match! You won a 10% OFF coupon! ✨';
-            resultEl.style.color = '#4CAF50';
+            
+            // Show coupon modal
+            setTimeout(showCouponModal, 1000);
+        } else if (coinsLeft === 0) {
+            resultEl.textContent = 'Game Over - No more coins!';
+            resultEl.style.color = '#e74c3c';
         } else {
             resultEl.textContent = 'Try again!';
             resultEl.style.color = '#666';
@@ -637,199 +732,19 @@ function initializeCouponSlotsGame() {
     
     function resetGame() {
         coinsLeft = 3;
+        localStorage.setItem('coupon-slots-coins', '3');
         resultEl.textContent = '';
         resultEl.style.color = '#666';
         slot1.textContent = '🍎';
-        slot2.textContent = '🍎';
-        slot3.textContent = '🍎';
+        slot2.textContent = '🍒';
+        slot3.textContent = '⭐';
         spinBtn.disabled = false;
-        spinBtn.textContent = '🪙 SPIN (1 Coin)';
         updateDisplay();
     }
     
     spinBtn.addEventListener('click', spin);
     
     // Initialize game
-    resetGame();
-}
-
-// Taco Truck Centipede Game
-function initializeTacoCentipedeGame() {
-    const canvas = document.getElementById('centipede-canvas');
-    const startBtn = document.getElementById('start-centipede-btn');
-    const resetBtn = document.getElementById('reset-centipede-btn');
-    const fedEl = document.getElementById('people-fed');
-    const angryEl = document.getElementById('angry-count');
-    
-    if (!canvas || !startBtn || !resetBtn) return;
-    
-    const ctx = canvas.getContext('2d');
-    
-    let people = [];
-    let fedCount = 0;
-    let angryCount = 0;
-    let gameRunning = false;
-    let gameLoop = null;
-    let spawnTimer = 0;
-    
-    function createPerson() {
-        return {
-            x: -30,
-            y: 200 + Math.random() * 200,
-            speed: 0.5 + Math.random() * 0.5,
-            happiness: 100,
-            fed: false,
-            angry: false
-        };
-    }
-    
-    function drawGame() {
-        // Clear canvas
-        ctx.fillStyle = '#87CEEB';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw taco truck
-        ctx.fillStyle = '#FFD700';
-        ctx.fillRect(10, 10, 80, 60);
-        ctx.font = '20px Arial';
-        ctx.fillText('🌮', 30, 45);
-        
-        // Draw people
-        people.forEach(person => {
-            if (person.fed) {
-                ctx.fillStyle = '#4CAF50';
-                ctx.fillText('😊', person.x, person.y);
-            } else if (person.angry) {
-                ctx.fillStyle = '#F44336';
-                ctx.fillText('😡', person.x, person.y);
-            } else {
-                ctx.fillStyle = '#FFA500';
-                ctx.fillText('🚶‍♂️', person.x, person.y);
-            }
-        });
-        
-        // Draw instructions
-        ctx.fillStyle = '#333';
-        ctx.font = '16px Arial';
-        ctx.fillText('Click on people to serve them tacos!', 20, canvas.height - 20);
-    }
-    
-    function updateGame() {
-        if (!gameRunning) return;
-        
-        // Spawn new people
-        spawnTimer++;
-        if (spawnTimer >= 120) { // Every 2 seconds at 60fps
-            people.push(createPerson());
-            spawnTimer = 0;
-        }
-        
-        // Update people
-        people.forEach((person, index) => {
-            if (!person.fed && !person.angry) {
-                person.x += person.speed;
-                person.happiness -= 0.2;
-                
-                if (person.happiness <= 0) {
-                    person.angry = true;
-                    angryCount++;
-                    angryEl.textContent = angryCount;
-                }
-                
-                // Remove people who walked off screen
-                if (person.x > canvas.width + 30) {
-                    people.splice(index, 1);
-                }
-            } else if (person.fed) {
-                // Fed people move faster and disappear
-                person.x += 2;
-                if (person.x > canvas.width + 30) {
-                    people.splice(index, 1);
-                }
-            }
-        });
-        
-        // Check game over
-        if (angryCount >= 5) {
-            gameOver();
-        }
-        
-        drawGame();
-    }
-    
-    function gameOver() {
-        gameRunning = false;
-        clearInterval(gameLoop);
-        startBtn.style.display = 'inline-block';
-        resetBtn.style.display = 'inline-block';
-        startBtn.textContent = 'Game Over - Restart';
-        alert(`Game Over! You fed ${fedCount} people before 5 got angry!`);
-    }
-    
-    function startGame() {
-        if (gameRunning) return;
-        
-        people = [];
-        fedCount = 0;
-        angryCount = 0;
-        spawnTimer = 0;
-        fedEl.textContent = '0';
-        angryEl.textContent = '0';
-        gameRunning = true;
-        
-        startBtn.style.display = 'none';
-        resetBtn.style.display = 'inline-block';
-        
-        gameLoop = setInterval(updateGame, 1000/60); // 60fps
-        gameIntervals.push(gameLoop);
-    }
-    
-    function resetGame() {
-        gameRunning = false;
-        clearInterval(gameLoop);
-        people = [];
-        fedCount = 0;
-        angryCount = 0;
-        fedEl.textContent = '0';
-        angryEl.textContent = '0';
-        startBtn.style.display = 'inline-block';
-        startBtn.textContent = 'Start Serving';
-        resetBtn.style.display = 'none';
-        
-        // Clear canvas
-        ctx.fillStyle = '#87CEEB';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        drawGame();
-    }
-    
-    // Click to feed people
-    canvas.addEventListener('click', function(e) {
-        if (!gameRunning) return;
-        
-        const rect = canvas.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
-        
-        people.forEach(person => {
-            if (!person.fed && !person.angry) {
-                const distance = Math.sqrt(
-                    Math.pow(clickX - person.x, 2) + Math.pow(clickY - person.y, 2)
-                );
-                
-                if (distance < 30) {
-                    person.fed = true;
-                    fedCount++;
-                    fedEl.textContent = fedCount;
-                }
-            }
-        });
-    });
-    
-    // Event listeners
-    startBtn.addEventListener('click', startGame);
-    resetBtn.addEventListener('click', resetGame);
-    
-    // Initialize canvas
     resetGame();
 }
 

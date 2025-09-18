@@ -140,8 +140,8 @@
                             <div class="game-card" id="orchard-worm-card">
                                 <div class="game-card-content">
                                     <div class="game-icon">🐛🍎</div>
-                                    <h4>Orchard Worm Game</h4>
-                                    <p>Snake-style worm collects fruit in an orchard</p>
+                                    <h4>Core Chaser</h4>
+                                    <p>Snake/centipede-style collection in an orchard</p>
                                     <button class="play-game-btn" onclick="openGame('orchard-worm')">Play Game</button>
                                 </div>
                                 <div class="game-hover-animation">
@@ -164,16 +164,16 @@
                                 </div>
                             </div>
                             
-                            <div class="game-card" id="taco-centipede-card">
+                            <div class="game-card" id="cosmic-drift-card">
                                 <div class="game-card-content">
-                                    <div class="game-icon">🌮🚶‍♂️</div>
-                                    <h4>Taco Truck Centipede</h4>
-                                    <p>Serve tacos to people marching forward before they get angry!</p>
-                                    <button class="play-game-btn" onclick="openGame('taco-centipede')">Play Game</button>
+                                    <div class="game-icon">🚀✨</div>
+                                    <h4>Cosmic Drift (Demo)</h4>
+                                    <p>Navigate through space in this immersive drift experience</p>
+                                    <button class="play-game-btn" onclick="window.open('https://nerdrage127.github.io/Cosmic-Drift/', '_blank')">Play Game</button>
                                 </div>
                                 <div class="game-hover-animation">
-                                    <div class="marching-people"></div>
-                                    <div class="taco-trail"></div>
+                                    <div class="cosmic-stars"></div>
+                                    <div class="drift-trail"></div>
                                 </div>
                             </div>
                         </div>
@@ -194,10 +194,10 @@
     <div class="fullscreen-game-overlay" id="game-overlay" style="display: none;">
         <button class="exit-fullscreen-btn" onclick="closeGame()">✖ Exit Full Screen</button>
         
-        <!-- Orchard Worm Game -->
+        <!-- Core Chaser Game -->
         <div class="fullscreen-game" id="orchard-worm-game" style="display: none;">
             <div class="game-header">
-                <h2>🍎 Orchard Worm Game</h2>
+                <h2>🍎 Core Chaser</h2>
                 <div class="game-score">Score: <span id="worm-score">0</span></div>
             </div>
             <canvas id="worm-canvas" width="800" height="600"></canvas>
@@ -220,8 +220,8 @@
                 <div class="slot-display">
                     <div class="slot-reel-container">
                         <div class="slot-reel" id="slot-1">🍎</div>
-                        <div class="slot-reel" id="slot-2">🍎</div>
-                        <div class="slot-reel" id="slot-3">🍎</div>
+                        <div class="slot-reel" id="slot-2">🍒</div>
+                        <div class="slot-reel" id="slot-3">⭐</div>
                     </div>
                 </div>
                 <div class="slots-result" id="slots-result"></div>
@@ -229,22 +229,6 @@
             </div>
             <div class="game-instructions">
                 <p>🎰 Match 3 symbols to win a coupon! You have 3 coin attempts.</p>
-            </div>
-        </div>
-        
-        <!-- Taco Truck Centipede Game -->
-        <div class="fullscreen-game" id="taco-centipede-game" style="display: none;">
-            <div class="game-header">
-                <h2>🌮 Taco Truck Centipede</h2>
-                <div class="game-score">Fed: <span id="people-fed">0</span> | Angry: <span id="angry-count">0</span></div>
-            </div>
-            <canvas id="centipede-canvas" width="800" height="600"></canvas>
-            <div class="game-controls">
-                <button id="start-centipede-btn" class="game-btn">Start Serving</button>
-                <button id="reset-centipede-btn" class="game-btn" style="display: none;">Reset</button>
-            </div>
-            <div class="game-instructions">
-                <p>🌮 Click on people to serve them tacos before they get angry! Keep the line happy!</p>
             </div>
         </div>
     </div>
