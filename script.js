@@ -1,17 +1,22 @@
-// Pricing data structure
+// Pricing data structure with new project types
 const pricingData = {
-    tiers: {
-        1: { name: "Digital Menu / Simple App", price: 325 },
-        2: { name: "Mini Interactive App/Game", price: 575 },
-        3: { name: "Standard Interactive App/Game", price: 1000 },
-        4: { name: "Premium Custom Build", price: 1500 }
+    projectTypes: {
+        "Phone-Friendly Menu": { name: "Phone-Friendly Menu", basePrice: 325, tier: 1 },
+        "Quick Quote Tool": { name: "Quick Quote Tool", basePrice: 575, tier: 2 },
+        "Play-for-Perks Game": { name: "Play-for-Perks Game", basePrice: 1000, tier: 3 },
+        "Premium Custom": { name: "Premium Custom", basePrice: 1500, tier: 4 },
+        "Print-Ready Logo Pack": { name: "Print-Ready Logo Pack", basePrice: 200, tier: 1 },
+        "Other": { name: "Custom Project", basePrice: 575, tier: 2 }
     },
     addons: {
-        logoPack: { name: "Logo Pack", price: 200 },
+        logoPack: { name: "Print-Ready Logo Pack", price: 200 },
         hosting: { name: "Hosting & Maintenance", price: 250, monthly: true },
         extraHours: { name: "Extra Hours (5hrs @ $50/hr)", price: 250 }
     }
 };
+
+// Track selected project type
+let selectedProjectType = null;
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -19,51 +24,197 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeDemoCalculator();
     initializeScratchGame();
     initializeSmoothScrolling();
+    initializeProjectTypeSelection();
 });
+
+// Project Type Selection Functions
+function initializeProjectTypeSelection() {
+    // Initially disable contact section
+    disableContactForm();
+}
+
+function selectProjectType(cardElement, projectType) {
+    // Remove selection from all cards
+    document.querySelectorAll('.project-type-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Add selection to clicked card
+    cardElement.classList.add('selected');
+    selectedProjectType = projectType;
+    
+    // Handle "Other" selection
+    if (projectType === 'Other') {
+        const otherInput = cardElement.querySelector('.other-input-container');
+        otherInput.style.display = 'block';
+        const textarea = cardElement.querySelector('#other-description');
+        textarea.focus();
+        
+        // Wait for user to enter description before enabling contact
+        textarea.addEventListener('input', function() {
+            if (this.value.trim().length > 10) {
+                enableContactForm();
+                updateContactFormMessage('Other', this.value.trim());
+            } else {
+                disableContactForm();
+            }
+        });
+    } else {
+        // Hide other input for non-Other selections
+        document.querySelectorAll('.other-input-container').forEach(container => {
+            container.style.display = 'none';
+        });
+        
+        // Enable contact form and update message
+        enableContactForm();
+        updateContactFormMessage(projectType);
+    }
+    
+    // Update pricing calculator if project type is available
+    const projectTypeSelect = document.getElementById('project-type-select');
+    if (projectTypeSelect && pricingData.projectTypes[projectType]) {
+        projectTypeSelect.value = projectType;
+        updatePricingCalculator();
+    }
+}
+
+function enableContactForm() {
+    const contactSection = document.getElementById('contact');
+    const contactForm = document.querySelector('.contact-form');
+    const disabledMessage = document.querySelector('.contact-disabled-message');
+    
+    // If we're not on a page with the contact form, return early
+    if (!contactSection || !contactForm) {
+        return;
+    }
+    
+    const inputs = contactForm.querySelectorAll('input, textarea, button');
+    
+    contactSection.classList.remove('disabled');
+    if (disabledMessage) {
+        disabledMessage.style.display = 'none';
+    }
+    
+    inputs.forEach(input => {
+        input.disabled = false;
+    });
+}
+
+function disableContactForm() {
+    const contactSection = document.getElementById('contact');
+    const contactForm = document.querySelector('.contact-form');
+    const disabledMessage = document.querySelector('.contact-disabled-message');
+    
+    // If we're not on a page with the contact form, return early
+    if (!contactSection || !contactForm) {
+        return;
+    }
+    
+    const inputs = contactForm.querySelectorAll('input, textarea, button');
+    
+    contactSection.classList.add('disabled');
+    if (disabledMessage) {
+        disabledMessage.style.display = 'block';
+    }
+    
+    inputs.forEach(input => {
+        input.disabled = true;
+    });
+}
+
+function updateContactFormMessage(projectType, customDescription = null) {
+    const messageTextarea = document.getElementById('message');
+    let prefillMessage;
+    
+    if (projectType === 'Other' && customDescription) {
+        prefillMessage = `Hi! I'm interested in a custom project: "${customDescription}". Could you provide more details about pricing and how we can work together?`;
+    } else {
+        prefillMessage = `Hi! I'm interested in a ${projectType} project. Could you provide more details about pricing and the development process?`;
+    }
+    
+    messageTextarea.value = prefillMessage;
+}
 
 // Pricing Calculator Functions
 function initializePricingCalculator() {
-    const tierSelect = document.getElementById('tier-select');
+    const projectTypeSelect = document.getElementById('project-type-select');
     const logoPackCheckbox = document.getElementById('logo-pack');
     const hostingCheckbox = document.getElementById('hosting');
     const extraHoursCheckbox = document.getElementById('extra-hours');
+    const complexitySlider = document.getElementById('complexity-slider');
 
     // Add event listeners
-    tierSelect.addEventListener('change', updatePricingCalculator);
-    logoPackCheckbox.addEventListener('change', updatePricingCalculator);
-    hostingCheckbox.addEventListener('change', updatePricingCalculator);
-    extraHoursCheckbox.addEventListener('change', updatePricingCalculator);
+    if (projectTypeSelect) {
+        projectTypeSelect.addEventListener('change', updatePricingCalculator);
+    }
+    if (logoPackCheckbox) {
+        logoPackCheckbox.addEventListener('change', updatePricingCalculator);
+    }
+    if (hostingCheckbox) {
+        hostingCheckbox.addEventListener('change', updatePricingCalculator);
+    }
+    if (extraHoursCheckbox) {
+        extraHoursCheckbox.addEventListener('change', updatePricingCalculator);
+    }
+    if (complexitySlider) {
+        complexitySlider.addEventListener('input', updatePricingCalculator);
+    }
 
     // Initial calculation
     updatePricingCalculator();
 }
 
 function updatePricingCalculator() {
-    const tierSelect = document.getElementById('tier-select');
+    const projectTypeSelect = document.getElementById('project-type-select');
     const logoPackCheckbox = document.getElementById('logo-pack');
     const hostingCheckbox = document.getElementById('hosting');
     const extraHoursCheckbox = document.getElementById('extra-hours');
+    const complexitySlider = document.getElementById('complexity-slider');
 
-    const selectedTier = parseInt(tierSelect.value);
-    let oneTimeCost = pricingData.tiers[selectedTier].price;
+    const oneTimeCostElement = document.getElementById('one-time-cost');
+    const monthlyCostElement = document.getElementById('monthly-cost');
+
+    // If we're not on a page with the pricing calculator, return early
+    if (!projectTypeSelect || !oneTimeCostElement || !monthlyCostElement) {
+        return;
+    }
+
+    if (!projectTypeSelect.value) {
+        oneTimeCostElement.textContent = 'Select a project type';
+        monthlyCostElement.textContent = '$0';
+        return;
+    }
+
+    const selectedProjectType = projectTypeSelect.value;
+    const projectData = pricingData.projectTypes[selectedProjectType];
+    
+    if (!projectData) {
+        oneTimeCostElement.textContent = 'Custom quote required';
+        monthlyCostElement.textContent = '$0';
+        return;
+    }
+
+    // Calculate base cost with complexity modifier
+    const complexityMultiplier = complexitySlider ? (complexitySlider.value / 100) : 1;
+    let oneTimeCost = Math.round(projectData.basePrice * complexityMultiplier);
     let monthlyCost = 0;
 
-    // Add addon costs
-    if (logoPackCheckbox.checked) {
+    // Add addon costs (with null checks)
+    if (logoPackCheckbox && logoPackCheckbox.checked && selectedProjectType !== 'Print-Ready Logo Pack') {
         oneTimeCost += pricingData.addons.logoPack.price;
     }
 
-    if (hostingCheckbox.checked) {
+    if (hostingCheckbox && hostingCheckbox.checked) {
         monthlyCost += pricingData.addons.hosting.price;
     }
 
-    if (extraHoursCheckbox.checked) {
+    if (extraHoursCheckbox && extraHoursCheckbox.checked) {
         oneTimeCost += pricingData.addons.extraHours.price;
     }
 
     // Update display
-    document.getElementById('one-time-cost').textContent = `$${oneTimeCost.toLocaleString()}`;
-    document.getElementById('monthly-cost').textContent = monthlyCost > 0 ? `$${monthlyCost.toLocaleString()}` : '$0';
+    oneTimeCostElement.textContent = `$${oneTimeCost.toLocaleString()}`;
+    monthlyCostElement.textContent = monthlyCost > 0 ? `$${monthlyCost.toLocaleString()}` : '$0';
 }
 
 // Demo Calculator Functions
@@ -141,20 +292,30 @@ function scrollToContact() {
     });
 }
 
-// Template contact function
+// Template contact function (legacy support)
 function contactWithTemplate(templateName) {
-    scrollToContact();
+    // Map old template names to new project types
+    const templateMapping = {
+        'Restaurant QR Menu': 'Phone-Friendly Menu',
+        'Retail Calculator': 'Quick Quote Tool',
+        'Service Estimator': 'Quick Quote Tool',
+        'Loyalty Game': 'Play-for-Perks Game',
+        'Event RSVP': 'Quick Quote Tool',
+        'Contact Form Plus': 'Quick Quote Tool'
+    };
     
-    // Pre-fill the contact form
-    setTimeout(() => {
-        const messageTextarea = document.getElementById('message');
-        const prefillMessage = `Hi! I'm interested in the ${templateName} template. Could you provide more details about pricing and customization options?`;
-        
-        if (messageTextarea) {
-            messageTextarea.value = prefillMessage;
-            messageTextarea.focus();
+    const projectType = templateMapping[templateName] || templateName;
+    
+    // Find and select the appropriate project type card
+    const projectTypeCards = document.querySelectorAll('.project-type-card');
+    projectTypeCards.forEach(card => {
+        if (card.dataset.projectType === projectType) {
+            selectProjectType(card, projectType);
         }
-    }, 1000);
+    });
+    
+    // Scroll to contact
+    scrollToContact();
 }
 
 // Contact form submission
@@ -243,5 +404,7 @@ window.GortonSolutions = {
     scrollToContact,
     contactWithTemplate,
     handleContactSubmit,
-    pricingData
+    selectProjectType,
+    pricingData,
+    selectedProjectType
 };
