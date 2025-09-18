@@ -31,29 +31,93 @@
             
             <div class="demo-grid">
                 <div class="demo-item">
-                    <h3>Phone-Friendly Menu Mockup</h3>
-                    <div class="demo-placeholder">
-                        <div class="qr-code">[QR CODE]</div>
-                        <div class="menu-preview">
-                            <h4>Bistro Menu</h4>
-                            <ul>
-                                <li>Appetizers</li>
-                                <li>Main Courses</li>
-                                <li>Desserts</li>
-                                <li>Beverages</li>
-                            </ul>
+                    <h3>🕹️ Arcade Zone Info Hub</h3>
+                    <div class="arcade-info">
+                        <div class="arcade-header">
+                            <h4>🎮 Welcome to Pixel Palace! 🎮</h4>
+                        </div>
+                        
+                        <div class="arcade-section">
+                            <h5>⏰ Hours of Operation</h5>
+                            <p>Mon-Thu: 4PM - 10PM<br>
+                            Fri-Sat: 12PM - 12AM<br>
+                            Sunday: 12PM - 8PM</p>
+                        </div>
+                        
+                        <div class="arcade-section">
+                            <h5>🪙 Pricing</h5>
+                            <p>• Game Tokens: $0.25 each<br>
+                            • Power Hour: $15 (unlimited play)<br>
+                            • Birthday Package: $25/kid</p>
+                        </div>
+                        
+                        <div class="arcade-section">
+                            <h5>🎉 Upcoming Events</h5>
+                            <p>• Friday Night Tournament (7PM)<br>
+                            • Retro Saturday Special<br>
+                            • High Score Sunday Challenge</p>
+                        </div>
+                        
+                        <div class="arcade-footer">
+                            <p>🥤 Grab a soda, challenge your friends, and save your high score! 🏆</p>
                         </div>
                     </div>
-                    <p class="demo-description">Scan-friendly digital menus that work on any device</p>
+                    <p class="demo-description">Fun, themed content pages that engage customers</p>
                 </div>
                 
                 <div class="demo-item">
-                    <h3>Quick Quote Tool Demo</h3>
-                    <div class="demo-calculator">
-                        <label>Square Footage:</label>
-                        <input type="number" id="demo-sqft" placeholder="Enter sq ft">
-                        <label>Price per sq ft: $<span id="demo-price">2.50</span></label>
-                        <div class="demo-result">Total: $<span id="demo-total">0.00</span></div>
+                    <h3>Pressure Washing Quote Calculator</h3>
+                    <div class="demo-calculator pressure-washing">
+                        <div class="input-group">
+                            <label for="home-sqft">Square Footage of Home:</label>
+                            <input type="number" id="home-sqft" placeholder="Enter sq ft">
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="driveway-cleaning" value="150">
+                                Driveway Cleaning (+$150)
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="garage-cleaning" value="100">
+                                Garage Cleaning (+$100)
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="premium-cleaners" value="percent">
+                                Premium Cleaners (+25%)
+                            </label>
+                        </div>
+                        
+                        <div class="quote-result">
+                            <h4>Quote Breakdown:</h4>
+                            <div class="line-items">
+                                <div class="line-item">
+                                    <span>Base cleaning:</span>
+                                    <span id="base-cost">$0.00</span>
+                                </div>
+                                <div class="line-item" id="driveway-line" style="display: none;">
+                                    <span>Driveway cleaning:</span>
+                                    <span>$150.00</span>
+                                </div>
+                                <div class="line-item" id="garage-line" style="display: none;">
+                                    <span>Garage cleaning:</span>
+                                    <span>$100.00</span>
+                                </div>
+                                <div class="line-item" id="premium-line" style="display: none;">
+                                    <span>Premium cleaners:</span>
+                                    <span id="premium-cost">$0.00</span>
+                                </div>
+                            </div>
+                            <div class="total-cost">
+                                <strong>Estimated Total: <span id="total-quote">$0.00</span></strong>
+                            </div>
+                        </div>
                     </div>
                     <p class="demo-description">Custom calculators that help customers get instant estimates</p>
                 </div>
