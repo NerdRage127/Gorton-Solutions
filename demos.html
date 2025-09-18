@@ -134,31 +134,51 @@
                 </div>
                 
                 <div class="demo-item">
-                    <h3>🍎 Apple Orchard Snake Game</h3>
-                    <div class="snake-game-container">
-                        <div class="game-info">
-                            <div class="score-display">
-                                <span>Apples: <span id="apple-count">0</span>/15</span>
-                                <span class="goal-text">Collect 15 apples for 10% OFF!</span>
+                    <h3>Demo Games</h3>
+                    <div class="demo-games-section">
+                        <div class="games-grid">
+                            <div class="game-card" id="orchard-worm-card">
+                                <div class="game-card-content">
+                                    <div class="game-icon">🐛🍎</div>
+                                    <h4>Orchard Worm Game</h4>
+                                    <p>Snake-style worm collects fruit in an orchard</p>
+                                    <button class="play-game-btn" onclick="openGame('orchard-worm')">Play Game</button>
+                                </div>
+                                <div class="game-hover-animation">
+                                    <div class="worm-trail"></div>
+                                    <div class="fruit-sparkle"></div>
+                                </div>
                             </div>
-                            <div class="coupon-area" id="coupon-area" style="display: none;">
-                                <div class="coupon">
-                                    🎉 CONGRATULATIONS! 🎉<br>
-                                    <strong>10% OFF YOUR NEXT VISIT!</strong><br>
-                                    <small>Show this screen at checkout</small>
+                            
+                            <div class="game-card" id="coupon-slots-card">
+                                <div class="game-card-content">
+                                    <div class="game-icon">🎰💰</div>
+                                    <h4>Coupon Slots</h4>
+                                    <p>Slot machine coupon generator - 3 coin attempts to win!</p>
+                                    <button class="play-game-btn" onclick="openGame('coupon-slots')">Play Game</button>
+                                </div>
+                                <div class="game-hover-animation">
+                                    <div class="slot-reel reel-1"></div>
+                                    <div class="slot-reel reel-2"></div>
+                                    <div class="slot-reel reel-3"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="game-card" id="taco-centipede-card">
+                                <div class="game-card-content">
+                                    <div class="game-icon">🌮🚶‍♂️</div>
+                                    <h4>Taco Truck Centipede</h4>
+                                    <p>Serve tacos to people marching forward before they get angry!</p>
+                                    <button class="play-game-btn" onclick="openGame('taco-centipede')">Play Game</button>
+                                </div>
+                                <div class="game-hover-animation">
+                                    <div class="marching-people"></div>
+                                    <div class="taco-trail"></div>
                                 </div>
                             </div>
                         </div>
-                        <canvas id="snake-canvas" width="400" height="300"></canvas>
-                        <div class="game-controls">
-                            <button id="start-snake-btn" class="game-btn">Start Game</button>
-                            <button id="reset-snake-btn" class="game-btn" style="display: none;">Reset</button>
-                        </div>
-                        <div class="game-instructions">
-                            <p>🐍 Use arrow keys to move the snake and collect apples! 🍎</p>
-                        </div>
                     </div>
-                    <p class="demo-description">Interactive snake game perfect for apple orchards to engage customers with rewards</p>
+                    <p class="demo-description">Interactive games that engage customers and promote your business</p>
                 </div>
             </div>
             
@@ -169,6 +189,65 @@
             </div>
         </div>
     </section>
+
+    <!-- Fullscreen Game Containers -->
+    <div class="fullscreen-game-overlay" id="game-overlay" style="display: none;">
+        <button class="exit-fullscreen-btn" onclick="closeGame()">✖ Exit Full Screen</button>
+        
+        <!-- Orchard Worm Game -->
+        <div class="fullscreen-game" id="orchard-worm-game" style="display: none;">
+            <div class="game-header">
+                <h2>🍎 Orchard Worm Game</h2>
+                <div class="game-score">Score: <span id="worm-score">0</span></div>
+            </div>
+            <canvas id="worm-canvas" width="800" height="600"></canvas>
+            <div class="game-controls">
+                <button id="start-worm-btn" class="game-btn">Start Game</button>
+                <button id="reset-worm-btn" class="game-btn" style="display: none;">Reset</button>
+            </div>
+            <div class="game-instructions">
+                <p>🐛 Use arrow keys to move the worm and collect fruit! Avoid hitting walls or yourself!</p>
+            </div>
+        </div>
+        
+        <!-- Coupon Slots Game -->
+        <div class="fullscreen-game" id="coupon-slots-game" style="display: none;">
+            <div class="game-header">
+                <h2>🎰 Coupon Slots</h2>
+                <div class="game-score">Coins Left: <span id="coins-left">3</span></div>
+            </div>
+            <div class="slots-machine">
+                <div class="slot-display">
+                    <div class="slot-reel-container">
+                        <div class="slot-reel" id="slot-1">🍎</div>
+                        <div class="slot-reel" id="slot-2">🍎</div>
+                        <div class="slot-reel" id="slot-3">🍎</div>
+                    </div>
+                </div>
+                <div class="slots-result" id="slots-result"></div>
+                <button id="spin-btn" class="game-btn">🪙 SPIN (1 Coin)</button>
+            </div>
+            <div class="game-instructions">
+                <p>🎰 Match 3 symbols to win a coupon! You have 3 coin attempts.</p>
+            </div>
+        </div>
+        
+        <!-- Taco Truck Centipede Game -->
+        <div class="fullscreen-game" id="taco-centipede-game" style="display: none;">
+            <div class="game-header">
+                <h2>🌮 Taco Truck Centipede</h2>
+                <div class="game-score">Fed: <span id="people-fed">0</span> | Angry: <span id="angry-count">0</span></div>
+            </div>
+            <canvas id="centipede-canvas" width="800" height="600"></canvas>
+            <div class="game-controls">
+                <button id="start-centipede-btn" class="game-btn">Start Serving</button>
+                <button id="reset-centipede-btn" class="game-btn" style="display: none;">Reset</button>
+            </div>
+            <div class="game-instructions">
+                <p>🌮 Click on people to serve them tacos before they get angry! Keep the line happy!</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">

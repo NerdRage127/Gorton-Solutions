@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initializePricingCalculator();
     initializeDemoCalculator();
     initializeScratchGame();
-    initializeSnakeGame();
     initializeSmoothScrolling();
     initializeProjectTypeSelection();
+    initializeGameSystem();
 });
 
 // Project Type Selection Functions
@@ -343,13 +343,62 @@ function initializeScratchGame() {
     }
 }
 
-// Snake Game Implementation
-function initializeSnakeGame() {
-    const canvas = document.getElementById('snake-canvas');
-    const startBtn = document.getElementById('start-snake-btn');
-    const resetBtn = document.getElementById('reset-snake-btn');
-    const appleCountEl = document.getElementById('apple-count');
-    const couponArea = document.getElementById('coupon-area');
+// Demo Games System
+function initializeGameSystem() {
+    // Game system will be initialized for the new games
+    console.log('Demo games system initialized');
+}
+
+// Game Functions
+function openGame(gameType) {
+    const overlay = document.getElementById('game-overlay');
+    const games = document.querySelectorAll('.fullscreen-game');
+    
+    // Hide all games
+    games.forEach(game => game.style.display = 'none');
+    
+    // Show the selected game
+    const selectedGame = document.getElementById(gameType + '-game');
+    if (selectedGame) {
+        selectedGame.style.display = 'block';
+        overlay.style.display = 'flex';
+        
+        // Initialize the specific game
+        switch(gameType) {
+            case 'orchard-worm':
+                initializeOrchardWormGame();
+                break;
+            case 'coupon-slots':
+                initializeCouponSlotsGame();
+                break;
+            case 'taco-centipede':
+                initializeTacoCentipedeGame();
+                break;
+        }
+    }
+}
+
+function closeGame() {
+    const overlay = document.getElementById('game-overlay');
+    overlay.style.display = 'none';
+    
+    // Stop any running games
+    clearAllGameIntervals();
+}
+
+let gameIntervals = [];
+
+function clearAllGameIntervals() {
+    gameIntervals.forEach(interval => clearInterval(interval));
+    gameIntervals = [];
+}
+
+// Orchard Worm Game (Snake-style)
+function initializeOrchardWormGame() {
+    const canvas = document.getElementById('worm-canvas');
+    const startBtn = document.getElementById('start-worm-btn');
+    const resetBtn = document.getElementById('reset-worm-btn');
+    const scoreEl = document.getElementById('worm-score');
     
     if (!canvas || !startBtn || !resetBtn) return;
     
@@ -357,47 +406,47 @@ function initializeSnakeGame() {
     const gridSize = 20;
     const tileCount = canvas.width / gridSize;
     
-    let snake = [{x: 10, y: 10}];
-    let food = {};
+    let worm = [{x: 10, y: 10}];
+    let fruit = {};
     let dx = 0;
     let dy = 0;
-    let appleCount = 0;
+    let score = 0;
     let gameRunning = false;
     let gameLoop = null;
     
-    function randomFood() {
-        food = {
+    function randomFruit() {
+        fruit = {
             x: Math.floor(Math.random() * tileCount),
             y: Math.floor(Math.random() * (canvas.height / gridSize))
         };
         
-        // Make sure food doesn't spawn on snake
-        for (let segment of snake) {
-            if (segment.x === food.x && segment.y === food.y) {
-                randomFood();
+        // Make sure fruit doesn't spawn on worm
+        for (let segment of worm) {
+            if (segment.x === fruit.x && segment.y === fruit.y) {
+                randomFruit();
                 return;
             }
         }
     }
     
     function drawGame() {
-        // Clear canvas
+        // Clear canvas with orchard background
         ctx.fillStyle = '#E8F5E8';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Draw snake
-        ctx.fillStyle = '#4CAF50';
-        for (let segment of snake) {
+        // Draw worm
+        ctx.fillStyle = '#8BC34A';
+        for (let segment of worm) {
             ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
         }
         
-        // Draw food (apple)
-        ctx.fillStyle = '#FF0000';
-        ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+        // Draw fruit
+        ctx.fillStyle = '#FF5722';
+        ctx.fillRect(fruit.x * gridSize, fruit.y * gridSize, gridSize - 2, gridSize - 2);
         
-        // Draw apple emoji on food
+        // Draw fruit emoji
         ctx.font = `${gridSize - 4}px Arial`;
-        ctx.fillText('🍎', food.x * gridSize + 2, food.y * gridSize + gridSize - 4);
+        ctx.fillText('🍎', fruit.x * gridSize + 2, fruit.y * gridSize + gridSize - 4);
     }
     
     function updateGame() {
@@ -406,36 +455,31 @@ function initializeSnakeGame() {
         // Don't move if no direction is set
         if (dx === 0 && dy === 0) return;
         
-        const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+        const head = {x: worm[0].x + dx, y: worm[0].y + dy};
         
         // Check wall collision
-        if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= canvas.height / gridSize) {
+        if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= (canvas.height / gridSize)) {
             gameOver();
             return;
         }
         
         // Check self collision
-        for (let segment of snake) {
+        for (let segment of worm) {
             if (head.x === segment.x && head.y === segment.y) {
                 gameOver();
                 return;
             }
         }
         
-        snake.unshift(head);
+        worm.unshift(head);
         
-        // Check food collision
-        if (head.x === food.x && head.y === food.y) {
-            appleCount++;
-            appleCountEl.textContent = appleCount;
-            randomFood();
-            
-            // Check if goal reached
-            if (appleCount >= 15) {
-                showCoupon();
-            }
+        // Check fruit collision
+        if (head.x === fruit.x && head.y === fruit.y) {
+            score += 10;
+            scoreEl.textContent = score;
+            randomFruit();
         } else {
-            snake.pop();
+            worm.pop();
         }
         
         drawGame();
@@ -447,42 +491,34 @@ function initializeSnakeGame() {
         startBtn.style.display = 'inline-block';
         resetBtn.style.display = 'inline-block';
         startBtn.textContent = 'Game Over - Restart';
-    }
-    
-    function showCoupon() {
-        couponArea.style.display = 'block';
-        gameRunning = false;
-        clearInterval(gameLoop);
-        startBtn.style.display = 'none';
-        resetBtn.style.display = 'inline-block';
-        resetBtn.textContent = 'Play Again';
+        alert(`Game Over! Final Score: ${score}`);
     }
     
     function startGame() {
         if (gameRunning) return;
         
-        snake = [{x: 10, y: 10}];
+        worm = [{x: 10, y: 10}];
         dx = 0;
         dy = 0;
         gameRunning = true;
-        randomFood();
+        randomFruit();
         drawGame();
         
         startBtn.style.display = 'none';
         resetBtn.style.display = 'inline-block';
         
         gameLoop = setInterval(updateGame, 200);
+        gameIntervals.push(gameLoop);
     }
     
     function resetGame() {
         gameRunning = false;
         clearInterval(gameLoop);
-        snake = [{x: 10, y: 10}];
+        worm = [{x: 10, y: 10}];
         dx = 0;
         dy = 0;
-        appleCount = 0;
-        appleCountEl.textContent = '0';
-        couponArea.style.display = 'none';
+        score = 0;
+        scoreEl.textContent = '0';
         startBtn.style.display = 'inline-block';
         startBtn.textContent = 'Start Game';
         resetBtn.style.display = 'none';
@@ -491,9 +527,9 @@ function initializeSnakeGame() {
         ctx.fillStyle = '#E8F5E8';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Draw initial state
-        ctx.fillStyle = '#4CAF50';
-        ctx.fillRect(snake[0].x * gridSize, snake[0].y * gridSize, gridSize - 2, gridSize - 2);
+        // Draw initial worm
+        ctx.fillStyle = '#8BC34A';
+        ctx.fillRect(worm[0].x * gridSize, worm[0].y * gridSize, gridSize - 2, gridSize - 2);
     }
     
     // Event listeners
@@ -504,21 +540,294 @@ function initializeSnakeGame() {
     document.addEventListener('keydown', function(e) {
         if (!gameRunning) return;
         
-        switch(e.code) {
+        switch(e.key) {
             case 'ArrowUp':
-                if (dy === 0) { dx = 0; dy = -1; }
+                if (dy !== 1) { dx = 0; dy = -1; }
+                e.preventDefault();
                 break;
             case 'ArrowDown':
-                if (dy === 0) { dx = 0; dy = 1; }
+                if (dy !== -1) { dx = 0; dy = 1; }
+                e.preventDefault();
                 break;
             case 'ArrowLeft':
-                if (dx === 0) { dx = -1; dy = 0; }
+                if (dx !== 1) { dx = -1; dy = 0; }
+                e.preventDefault();
                 break;
             case 'ArrowRight':
-                if (dx === 0) { dx = 1; dy = 0; }
+                if (dx !== -1) { dx = 1; dy = 0; }
+                e.preventDefault();
                 break;
         }
     });
+    
+    // Initialize canvas
+    resetGame();
+}
+
+// Coupon Slots Game
+function initializeCouponSlotsGame() {
+    const spinBtn = document.getElementById('spin-btn');
+    const coinsLeftEl = document.getElementById('coins-left');
+    const resultEl = document.getElementById('slots-result');
+    const slot1 = document.getElementById('slot-1');
+    const slot2 = document.getElementById('slot-2');
+    const slot3 = document.getElementById('slot-3');
+    
+    if (!spinBtn || !coinsLeftEl || !resultEl) return;
+    
+    let coinsLeft = 3;
+    const symbols = ['🍎', '🍊', '🍌', '🍇', '🔔', '💎', '🍒'];
+    
+    function updateDisplay() {
+        coinsLeftEl.textContent = coinsLeft;
+        if (coinsLeft <= 0) {
+            spinBtn.disabled = true;
+            spinBtn.textContent = 'No Coins Left';
+            if (!resultEl.textContent.includes('WIN')) {
+                resultEl.textContent = 'Better luck next time!';
+            }
+        }
+    }
+    
+    function spin() {
+        if (coinsLeft <= 0) return;
+        
+        coinsLeft--;
+        resultEl.textContent = 'Spinning...';
+        
+        // Animate slots
+        let spins = 0;
+        const maxSpins = 10;
+        
+        const spinInterval = setInterval(() => {
+            slot1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            slot2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            slot3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            
+            spins++;
+            if (spins >= maxSpins) {
+                clearInterval(spinInterval);
+                checkResult();
+            }
+        }, 100);
+        
+        gameIntervals.push(spinInterval);
+    }
+    
+    function checkResult() {
+        const symbol1 = slot1.textContent;
+        const symbol2 = slot2.textContent;
+        const symbol3 = slot3.textContent;
+        
+        if (symbol1 === symbol2 && symbol2 === symbol3) {
+            resultEl.innerHTML = '🎉 <strong>JACKPOT!</strong> You won a 25% OFF coupon! 🎉';
+            resultEl.style.color = '#FFD700';
+            spinBtn.disabled = true;
+            spinBtn.textContent = 'You Won!';
+        } else if (symbol1 === symbol2 || symbol2 === symbol3 || symbol1 === symbol3) {
+            resultEl.innerHTML = '✨ Two match! You won a 10% OFF coupon! ✨';
+            resultEl.style.color = '#4CAF50';
+        } else {
+            resultEl.textContent = 'Try again!';
+            resultEl.style.color = '#666';
+        }
+        
+        updateDisplay();
+    }
+    
+    function resetGame() {
+        coinsLeft = 3;
+        resultEl.textContent = '';
+        resultEl.style.color = '#666';
+        slot1.textContent = '🍎';
+        slot2.textContent = '🍎';
+        slot3.textContent = '🍎';
+        spinBtn.disabled = false;
+        spinBtn.textContent = '🪙 SPIN (1 Coin)';
+        updateDisplay();
+    }
+    
+    spinBtn.addEventListener('click', spin);
+    
+    // Initialize game
+    resetGame();
+}
+
+// Taco Truck Centipede Game
+function initializeTacoCentipedeGame() {
+    const canvas = document.getElementById('centipede-canvas');
+    const startBtn = document.getElementById('start-centipede-btn');
+    const resetBtn = document.getElementById('reset-centipede-btn');
+    const fedEl = document.getElementById('people-fed');
+    const angryEl = document.getElementById('angry-count');
+    
+    if (!canvas || !startBtn || !resetBtn) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    let people = [];
+    let fedCount = 0;
+    let angryCount = 0;
+    let gameRunning = false;
+    let gameLoop = null;
+    let spawnTimer = 0;
+    
+    function createPerson() {
+        return {
+            x: -30,
+            y: 200 + Math.random() * 200,
+            speed: 0.5 + Math.random() * 0.5,
+            happiness: 100,
+            fed: false,
+            angry: false
+        };
+    }
+    
+    function drawGame() {
+        // Clear canvas
+        ctx.fillStyle = '#87CEEB';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw taco truck
+        ctx.fillStyle = '#FFD700';
+        ctx.fillRect(10, 10, 80, 60);
+        ctx.font = '20px Arial';
+        ctx.fillText('🌮', 30, 45);
+        
+        // Draw people
+        people.forEach(person => {
+            if (person.fed) {
+                ctx.fillStyle = '#4CAF50';
+                ctx.fillText('😊', person.x, person.y);
+            } else if (person.angry) {
+                ctx.fillStyle = '#F44336';
+                ctx.fillText('😡', person.x, person.y);
+            } else {
+                ctx.fillStyle = '#FFA500';
+                ctx.fillText('🚶‍♂️', person.x, person.y);
+            }
+        });
+        
+        // Draw instructions
+        ctx.fillStyle = '#333';
+        ctx.font = '16px Arial';
+        ctx.fillText('Click on people to serve them tacos!', 20, canvas.height - 20);
+    }
+    
+    function updateGame() {
+        if (!gameRunning) return;
+        
+        // Spawn new people
+        spawnTimer++;
+        if (spawnTimer >= 120) { // Every 2 seconds at 60fps
+            people.push(createPerson());
+            spawnTimer = 0;
+        }
+        
+        // Update people
+        people.forEach((person, index) => {
+            if (!person.fed && !person.angry) {
+                person.x += person.speed;
+                person.happiness -= 0.2;
+                
+                if (person.happiness <= 0) {
+                    person.angry = true;
+                    angryCount++;
+                    angryEl.textContent = angryCount;
+                }
+                
+                // Remove people who walked off screen
+                if (person.x > canvas.width + 30) {
+                    people.splice(index, 1);
+                }
+            } else if (person.fed) {
+                // Fed people move faster and disappear
+                person.x += 2;
+                if (person.x > canvas.width + 30) {
+                    people.splice(index, 1);
+                }
+            }
+        });
+        
+        // Check game over
+        if (angryCount >= 5) {
+            gameOver();
+        }
+        
+        drawGame();
+    }
+    
+    function gameOver() {
+        gameRunning = false;
+        clearInterval(gameLoop);
+        startBtn.style.display = 'inline-block';
+        resetBtn.style.display = 'inline-block';
+        startBtn.textContent = 'Game Over - Restart';
+        alert(`Game Over! You fed ${fedCount} people before 5 got angry!`);
+    }
+    
+    function startGame() {
+        if (gameRunning) return;
+        
+        people = [];
+        fedCount = 0;
+        angryCount = 0;
+        spawnTimer = 0;
+        fedEl.textContent = '0';
+        angryEl.textContent = '0';
+        gameRunning = true;
+        
+        startBtn.style.display = 'none';
+        resetBtn.style.display = 'inline-block';
+        
+        gameLoop = setInterval(updateGame, 1000/60); // 60fps
+        gameIntervals.push(gameLoop);
+    }
+    
+    function resetGame() {
+        gameRunning = false;
+        clearInterval(gameLoop);
+        people = [];
+        fedCount = 0;
+        angryCount = 0;
+        fedEl.textContent = '0';
+        angryEl.textContent = '0';
+        startBtn.style.display = 'inline-block';
+        startBtn.textContent = 'Start Serving';
+        resetBtn.style.display = 'none';
+        
+        // Clear canvas
+        ctx.fillStyle = '#87CEEB';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawGame();
+    }
+    
+    // Click to feed people
+    canvas.addEventListener('click', function(e) {
+        if (!gameRunning) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+        
+        people.forEach(person => {
+            if (!person.fed && !person.angry) {
+                const distance = Math.sqrt(
+                    Math.pow(clickX - person.x, 2) + Math.pow(clickY - person.y, 2)
+                );
+                
+                if (distance < 30) {
+                    person.fed = true;
+                    fedCount++;
+                    fedEl.textContent = fedCount;
+                }
+            }
+        });
+    });
+    
+    // Event listeners
+    startBtn.addEventListener('click', startGame);
+    resetBtn.addEventListener('click', resetGame);
     
     // Initialize canvas
     resetGame();
