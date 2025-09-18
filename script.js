@@ -219,10 +219,29 @@ function updatePricingCalculator() {
 
 // Demo Calculator Functions
 function initializeDemoCalculator() {
+    // Old simple calculator (if still exists)
     const sqftInput = document.getElementById('demo-sqft');
-    
     if (sqftInput) {
         sqftInput.addEventListener('input', updateDemoCalculator);
+    }
+    
+    // New pressure washing calculator
+    const homeSqftInput = document.getElementById('home-sqft');
+    const drivewayCheckbox = document.getElementById('driveway-cleaning');
+    const garageCheckbox = document.getElementById('garage-cleaning');
+    const premiumCheckbox = document.getElementById('premium-cleaners');
+    
+    if (homeSqftInput) {
+        homeSqftInput.addEventListener('input', updatePressureWashingQuote);
+    }
+    if (drivewayCheckbox) {
+        drivewayCheckbox.addEventListener('change', updatePressureWashingQuote);
+    }
+    if (garageCheckbox) {
+        garageCheckbox.addEventListener('change', updatePressureWashingQuote);
+    }
+    if (premiumCheckbox) {
+        premiumCheckbox.addEventListener('change', updatePressureWashingQuote);
     }
 }
 
@@ -232,28 +251,94 @@ function updateDemoCalculator() {
     const sqft = parseFloat(sqftInput.value) || 0;
     const total = sqft * pricePerSqft;
 
-    document.getElementById('demo-total').textContent = total.toFixed(2);
+    const totalElement = document.getElementById('demo-total');
+    if (totalElement) {
+        totalElement.textContent = total.toFixed(2);
+    }
+}
+
+function updatePressureWashingQuote() {
+    const homeSqftInput = document.getElementById('home-sqft');
+    const drivewayCheckbox = document.getElementById('driveway-cleaning');
+    const garageCheckbox = document.getElementById('garage-cleaning');
+    const premiumCheckbox = document.getElementById('premium-cleaners');
+    
+    if (!homeSqftInput) return;
+    
+    const sqft = parseFloat(homeSqftInput.value) || 0;
+    const baseRate = 0.15; // $0.15 per sq ft
+    let baseCost = sqft * baseRate;
+    
+    let drivewayAdd = 0;
+    let garageAdd = 0;
+    let premiumAdd = 0;
+    
+    // Handle add-ons
+    if (drivewayCheckbox && drivewayCheckbox.checked) {
+        drivewayAdd = 150;
+        document.getElementById('driveway-line').style.display = 'flex';
+    } else {
+        document.getElementById('driveway-line').style.display = 'none';
+    }
+    
+    if (garageCheckbox && garageCheckbox.checked) {
+        garageAdd = 100;
+        document.getElementById('garage-line').style.display = 'flex';
+    } else {
+        document.getElementById('garage-line').style.display = 'none';
+    }
+    
+    let subtotal = baseCost + drivewayAdd + garageAdd;
+    
+    if (premiumCheckbox && premiumCheckbox.checked) {
+        premiumAdd = subtotal * 0.25;
+        document.getElementById('premium-line').style.display = 'flex';
+        document.getElementById('premium-cost').textContent = '$' + premiumAdd.toFixed(2);
+    } else {
+        document.getElementById('premium-line').style.display = 'none';
+    }
+    
+    const total = subtotal + premiumAdd;
+    
+    // Update display
+    document.getElementById('base-cost').textContent = '$' + baseCost.toFixed(2);
+    document.getElementById('total-quote').textContent = '$' + total.toFixed(2);
 }
 
 // Scratch Game Demo
 function initializeScratchGame() {
     const scratchBtn = document.querySelector('.scratch-btn');
+    const scratchArea = document.querySelector('.scratch-area');
     
-    if (scratchBtn) {
-        scratchBtn.addEventListener('click', function() {
-            const scratchArea = document.querySelector('.scratch-area');
-            const discounts = ['10% OFF', '15% OFF', '20% OFF', 'FREE LOGO', 'TRY AGAIN'];
-            const randomDiscount = discounts[Math.floor(Math.random() * discounts.length)];
-            
-            scratchArea.textContent = randomDiscount;
-            scratchArea.style.background = randomDiscount === 'TRY AGAIN' ? '#e74c3c' : '#27ae60';
-            
-            // Reset after 3 seconds
-            setTimeout(() => {
-                scratchArea.textContent = 'Scratch to reveal discount!';
-                scratchArea.style.background = '#333';
-            }, 3000);
-        });
+    if (scratchBtn && scratchArea) {
+        // Check if already scratched this session
+        const hasScratched = localStorage.getItem('scratched-this-session');
+        
+        if (hasScratched) {
+            scratchArea.textContent = "You've already revealed your perk this time!";
+            scratchArea.style.background = '#6c757d';
+            scratchBtn.disabled = true;
+            scratchBtn.textContent = 'Already Used';
+            scratchBtn.style.opacity = '0.6';
+            scratchBtn.style.cursor = 'not-allowed';
+        } else {
+            scratchBtn.addEventListener('click', function() {
+                const discounts = ['10% OFF', '15% OFF', '20% OFF', 'FREE LOGO', 'TRY AGAIN'];
+                const randomDiscount = discounts[Math.floor(Math.random() * discounts.length)];
+                
+                scratchArea.textContent = randomDiscount;
+                scratchArea.style.background = randomDiscount === 'TRY AGAIN' ? '#e74c3c' : '#27ae60';
+                
+                // Mark as used for this session
+                localStorage.setItem('scratched-this-session', 'true');
+                
+                // Disable button after use
+                scratchBtn.disabled = true;
+                scratchBtn.textContent = 'Used';
+                scratchBtn.style.opacity = '0.6';
+                scratchBtn.style.cursor = 'not-allowed';
+            });
+        }
     }
 }
 
