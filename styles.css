@@ -349,6 +349,96 @@ h2 {
     cursor: pointer;
 }
 
+/* Snake Game Styles */
+.snake-game-container {
+    text-align: center;
+    background: linear-gradient(135deg, #8BC34A, #4CAF50);
+    padding: 1.5rem;
+    border-radius: 8px;
+    color: white;
+}
+
+.game-info {
+    margin-bottom: 1rem;
+}
+
+.score-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.goal-text {
+    font-size: 0.9rem;
+    color: #FFD700;
+}
+
+.coupon-area {
+    margin: 1rem 0;
+}
+
+.coupon {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    color: #333;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 2px dashed #FF6B35;
+    font-weight: bold;
+    text-align: center;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+#snake-canvas {
+    border: 3px solid #2E7D32;
+    background: #E8F5E8;
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+
+.game-controls {
+    margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.game-btn {
+    background: #FF6B35;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.game-btn:hover {
+    background: #E55A2B;
+}
+
+.game-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.game-instructions {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    opacity: 0.9;
+}
+
 /* Pricing Section */
 .pricing-grid {
     display: grid;

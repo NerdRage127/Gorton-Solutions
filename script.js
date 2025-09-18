@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializePricingCalculator();
     initializeDemoCalculator();
     initializeScratchGame();
+    initializeSnakeGame();
     initializeSmoothScrolling();
     initializeProjectTypeSelection();
 });
@@ -340,6 +341,187 @@ function initializeScratchGame() {
             });
         }
     }
+}
+
+// Snake Game Implementation
+function initializeSnakeGame() {
+    const canvas = document.getElementById('snake-canvas');
+    const startBtn = document.getElementById('start-snake-btn');
+    const resetBtn = document.getElementById('reset-snake-btn');
+    const appleCountEl = document.getElementById('apple-count');
+    const couponArea = document.getElementById('coupon-area');
+    
+    if (!canvas || !startBtn || !resetBtn) return;
+    
+    const ctx = canvas.getContext('2d');
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize;
+    
+    let snake = [{x: 10, y: 10}];
+    let food = {};
+    let dx = 0;
+    let dy = 0;
+    let appleCount = 0;
+    let gameRunning = false;
+    let gameLoop = null;
+    
+    function randomFood() {
+        food = {
+            x: Math.floor(Math.random() * tileCount),
+            y: Math.floor(Math.random() * (canvas.height / gridSize))
+        };
+        
+        // Make sure food doesn't spawn on snake
+        for (let segment of snake) {
+            if (segment.x === food.x && segment.y === food.y) {
+                randomFood();
+                return;
+            }
+        }
+    }
+    
+    function drawGame() {
+        // Clear canvas
+        ctx.fillStyle = '#E8F5E8';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw snake
+        ctx.fillStyle = '#4CAF50';
+        for (let segment of snake) {
+            ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+        }
+        
+        // Draw food (apple)
+        ctx.fillStyle = '#FF0000';
+        ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+        
+        // Draw apple emoji on food
+        ctx.font = `${gridSize - 4}px Arial`;
+        ctx.fillText('🍎', food.x * gridSize + 2, food.y * gridSize + gridSize - 4);
+    }
+    
+    function updateGame() {
+        if (!gameRunning) return;
+        
+        // Don't move if no direction is set
+        if (dx === 0 && dy === 0) return;
+        
+        const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+        
+        // Check wall collision
+        if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= canvas.height / gridSize) {
+            gameOver();
+            return;
+        }
+        
+        // Check self collision
+        for (let segment of snake) {
+            if (head.x === segment.x && head.y === segment.y) {
+                gameOver();
+                return;
+            }
+        }
+        
+        snake.unshift(head);
+        
+        // Check food collision
+        if (head.x === food.x && head.y === food.y) {
+            appleCount++;
+            appleCountEl.textContent = appleCount;
+            randomFood();
+            
+            // Check if goal reached
+            if (appleCount >= 15) {
+                showCoupon();
+            }
+        } else {
+            snake.pop();
+        }
+        
+        drawGame();
+    }
+    
+    function gameOver() {
+        gameRunning = false;
+        clearInterval(gameLoop);
+        startBtn.style.display = 'inline-block';
+        resetBtn.style.display = 'inline-block';
+        startBtn.textContent = 'Game Over - Restart';
+    }
+    
+    function showCoupon() {
+        couponArea.style.display = 'block';
+        gameRunning = false;
+        clearInterval(gameLoop);
+        startBtn.style.display = 'none';
+        resetBtn.style.display = 'inline-block';
+        resetBtn.textContent = 'Play Again';
+    }
+    
+    function startGame() {
+        if (gameRunning) return;
+        
+        snake = [{x: 10, y: 10}];
+        dx = 0;
+        dy = 0;
+        gameRunning = true;
+        randomFood();
+        drawGame();
+        
+        startBtn.style.display = 'none';
+        resetBtn.style.display = 'inline-block';
+        
+        gameLoop = setInterval(updateGame, 200);
+    }
+    
+    function resetGame() {
+        gameRunning = false;
+        clearInterval(gameLoop);
+        snake = [{x: 10, y: 10}];
+        dx = 0;
+        dy = 0;
+        appleCount = 0;
+        appleCountEl.textContent = '0';
+        couponArea.style.display = 'none';
+        startBtn.style.display = 'inline-block';
+        startBtn.textContent = 'Start Game';
+        resetBtn.style.display = 'none';
+        
+        // Clear canvas
+        ctx.fillStyle = '#E8F5E8';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw initial state
+        ctx.fillStyle = '#4CAF50';
+        ctx.fillRect(snake[0].x * gridSize, snake[0].y * gridSize, gridSize - 2, gridSize - 2);
+    }
+    
+    // Event listeners
+    startBtn.addEventListener('click', startGame);
+    resetBtn.addEventListener('click', resetGame);
+    
+    // Keyboard controls
+    document.addEventListener('keydown', function(e) {
+        if (!gameRunning) return;
+        
+        switch(e.code) {
+            case 'ArrowUp':
+                if (dy === 0) { dx = 0; dy = -1; }
+                break;
+            case 'ArrowDown':
+                if (dy === 0) { dx = 0; dy = 1; }
+                break;
+            case 'ArrowLeft':
+                if (dx === 0) { dx = -1; dy = 0; }
+                break;
+            case 'ArrowRight':
+                if (dx === 0) { dx = 1; dy = 0; }
+                break;
+        }
+    });
+    
+    // Initialize canvas
+    resetGame();
 }
 
 // Smooth scrolling for navigation
