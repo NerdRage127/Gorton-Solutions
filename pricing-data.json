@@ -1,0 +1,108 @@
+{
+  "tiers": {
+    "1": {
+      "name": "Digital Menu / Simple App",
+      "description": "Basic digital solutions like QR menus and simple calculators",
+      "priceRange": "$250 - $400",
+      "defaultPrice": 325
+    },
+    "2": {
+      "name": "Mini Interactive App/Game",
+      "description": "Small interactive applications with basic game mechanics",
+      "priceRange": "$400 - $750",
+      "defaultPrice": 575
+    },
+    "3": {
+      "name": "Standard Interactive App/Game",
+      "description": "Full-featured interactive applications with advanced functionality",
+      "priceRange": "$800 - $1,200",
+      "defaultPrice": 1000
+    },
+    "4": {
+      "name": "Premium Custom Build",
+      "description": "Fully customized solutions with complex requirements",
+      "priceRange": "$1,500+",
+      "defaultPrice": 1500
+    }
+  },
+  "addons": {
+    "logoPack": {
+      "name": "Logo Pack",
+      "description": "Professional logo optimization and brand asset preparation",
+      "priceRange": "$150 - $250",
+      "defaultPrice": 200,
+      "type": "oneTime"
+    },
+    "hosting": {
+      "name": "Hosting & Maintenance",
+      "description": "Monthly hosting and ongoing maintenance services",
+      "priceRange": "$200 - $300/mo",
+      "defaultPrice": 250,
+      "type": "monthly"
+    },
+    "extraHours": {
+      "name": "Extra Hours",
+      "description": "Additional development time beyond the base package",
+      "priceRange": "$40 - $60/hr",
+      "defaultPrice": 50,
+      "type": "hourly",
+      "defaultHours": 5
+    }
+  },
+  "templates": [
+    {
+      "name": "Restaurant QR Menu",
+      "description": "Ready-to-use digital menu template",
+      "tier": 1,
+      "category": "restaurant"
+    },
+    {
+      "name": "Retail Calculator",
+      "description": "Product pricing and quantity calculator",
+      "tier": 2,
+      "category": "retail"
+    },
+    {
+      "name": "Service Estimator",
+      "description": "Cost estimation tool for services",
+      "tier": 2,
+      "category": "services"
+    },
+    {
+      "name": "Loyalty Game",
+      "description": "Customer engagement mini-game",
+      "tier": 3,
+      "category": "games"
+    },
+    {
+      "name": "Event RSVP",
+      "description": "Simple event registration system",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "name": "Contact Form Plus",
+      "description": "Enhanced contact form with features",
+      "tier": 1,
+      "category": "forms"
+    }
+  ],
+  "services": [
+    {
+      "name": "QR Menus",
+      "description": "Digital menus with QR codes that customers can scan to view your offerings instantly."
+    },
+    {
+      "name": "Product Calculators",
+      "description": "Custom calculators to help customers estimate costs, quantities, or specifications."
+    },
+    {
+      "name": "Coupon Mini-Games",
+      "description": "Interactive games that engage customers while promoting your deals and offers."
+    },
+    {
+      "name": "Logo Cleanup Packs",
+      "description": "Professional logo optimization and brand asset preparation for digital use."
+    }
+  ]
+}
