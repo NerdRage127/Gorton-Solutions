@@ -16,7 +16,6 @@
             </div>
             <nav class="nav">
                 <a href="#what-i-do">What I Do</a>
-                <a href="#demos">Demos</a>
                 <a href="#pricing">Pricing</a>
                 <a href="#contact">Contact</a>
             </nav>
@@ -28,7 +27,10 @@
         <div class="container">
             <h1>Simple digital tools for small businesses.</h1>
             <p class="subhead">Turnkey menus, calculators, and mini-apps that solve everyday problems.</p>
-            <button class="cta-button" onclick="scrollToContact()">Start a Project</button>
+            <div class="hero-buttons">
+                <button class="cta-button" onclick="scrollToContact()">Start a Project</button>
+                <button class="cta-button secondary" onclick="window.open('demos.html', '_blank')">See Demos</button>
+            </div>
         </div>
     </section>
 
@@ -38,66 +40,29 @@
             <h2>What I Do</h2>
             <div class="services-grid">
                 <div class="service-card">
-                    <h3>QR Menus</h3>
+                    <h3>Phone-Friendly Menu</h3>
                     <p>Digital menus with QR codes that customers can scan to view your offerings instantly.</p>
                 </div>
                 <div class="service-card">
-                    <h3>Product Calculators</h3>
+                    <h3>Quick Quote Tool</h3>
                     <p>Custom calculators to help customers estimate costs, quantities, or specifications.</p>
                 </div>
                 <div class="service-card">
-                    <h3>Coupon Mini-Games</h3>
+                    <h3>Play-for-Perks Game</h3>
                     <p>Interactive games that engage customers while promoting your deals and offers.</p>
                 </div>
                 <div class="service-card">
-                    <h3>Logo Cleanup Packs</h3>
+                    <h3>Print-Ready Logo Pack</h3>
                     <p>Professional logo optimization and brand asset preparation for digital use.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Custom Mini-App</h3>
+                    <p>Small tool tailored to your specific workflow and business needs.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Demos Section -->
-    <section id="demos" class="demos">
-        <div class="container">
-            <h2>Demos</h2>
-            <div class="demo-grid">
-                <div class="demo-item">
-                    <h3>QR Menu Mockup</h3>
-                    <div class="demo-placeholder">
-                        <div class="qr-code">[QR CODE]</div>
-                        <div class="menu-preview">
-                            <h4>Bistro Menu</h4>
-                            <ul>
-                                <li>Appetizers</li>
-                                <li>Main Courses</li>
-                                <li>Desserts</li>
-                                <li>Beverages</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="demo-item">
-                    <h3>Product Calculator Demo</h3>
-                    <div class="demo-calculator">
-                        <label>Square Footage:</label>
-                        <input type="number" id="demo-sqft" placeholder="Enter sq ft">
-                        <label>Price per sq ft: $<span id="demo-price">2.50</span></label>
-                        <div class="demo-result">Total: $<span id="demo-total">0.00</span></div>
-                    </div>
-                </div>
-                <div class="demo-item">
-                    <h3>Game Teaser</h3>
-                    <div class="game-placeholder">
-                        <div class="scratch-card">
-                            <div class="scratch-area">Scratch to reveal discount!</div>
-                            <button class="scratch-btn">Try Demo</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Pricing Section -->
     <section id="pricing" class="pricing">
@@ -105,24 +70,29 @@
             <h2>Pricing</h2>
             <div class="pricing-grid">
                 <div class="pricing-card">
-                    <h3>Tier 1</h3>
-                    <p class="tier-description">Digital Menu / Simple App</p>
-                    <p class="price-range">$250 - $400</p>
+                    <h3>Phone-Friendly Menu</h3>
+                    <p class="tier-description">Digital menus with QR codes</p>
+                    <p class="price-range">$275 - $375</p>
                 </div>
                 <div class="pricing-card">
-                    <h3>Tier 2</h3>
-                    <p class="tier-description">Mini Interactive App/Game</p>
-                    <p class="price-range">$400 - $750</p>
+                    <h3>Quick Quote Tool</h3>
+                    <p class="tier-description">Custom calculators and estimators</p>
+                    <p class="price-range">$490 - $660</p>
                 </div>
                 <div class="pricing-card">
-                    <h3>Tier 3</h3>
-                    <p class="tier-description">Standard Interactive App/Game</p>
-                    <p class="price-range">$800 - $1,200</p>
+                    <h3>Play-for-Perks Game</h3>
+                    <p class="tier-description">Interactive customer engagement</p>
+                    <p class="price-range">$850 - $1,150</p>
                 </div>
                 <div class="pricing-card">
-                    <h3>Tier 4</h3>
-                    <p class="tier-description">Premium Custom Build</p>
-                    <p class="price-range">$1,500+</p>
+                    <h3>Premium Custom</h3>
+                    <p class="tier-description">Fully customized solutions</p>
+                    <p class="price-range">$1,275 - $1,725</p>
+                </div>
+                <div class="pricing-card">
+                    <h3>Print-Ready Logo Pack</h3>
+                    <p class="tier-description">Logo optimization and brand assets</p>
+                    <p class="price-range">$170 - $230</p>
                 </div>
             </div>
 
@@ -131,12 +101,15 @@
                 <h3>Cost Calculator</h3>
                 <div class="calculator-form">
                     <div class="form-group">
-                        <label for="tier-select">Choose Tier:</label>
-                        <select id="tier-select">
-                            <option value="1">Tier 1 - Digital Menu / Simple App ($325)</option>
-                            <option value="2">Tier 2 - Mini Interactive App/Game ($575)</option>
-                            <option value="3">Tier 3 - Standard Interactive App/Game ($1,000)</option>
-                            <option value="4">Tier 4 - Premium Custom Build ($1,500)</option>
+                        <label for="project-type-select">Choose Project Type:</label>
+                        <select id="project-type-select">
+                            <option value="">Select a project type...</option>
+                            <option value="Phone-Friendly Menu">Phone-Friendly Menu ($325)</option>
+                            <option value="Quick Quote Tool">Quick Quote Tool ($575)</option>
+                            <option value="Play-for-Perks Game">Play-for-Perks Game ($1,000)</option>
+                            <option value="Premium Custom">Premium Custom ($1,500)</option>
+                            <option value="Print-Ready Logo Pack">Print-Ready Logo Pack ($200)</option>
+                            <option value="Other">Other (Custom Quote)</option>
                         </select>
                     </div>
                     
@@ -145,23 +118,33 @@
                         <div class="addon-checkboxes">
                             <label>
                                 <input type="checkbox" id="logo-pack" value="200">
-                                Logo Pack ($150 - $250)
+                                Print-Ready Logo Pack ($200)
                             </label>
                             <label>
                                 <input type="checkbox" id="hosting" value="250">
-                                Hosting & Maintenance ($200 - $300/mo)
+                                Hosting & Maintenance ($250/mo)
                             </label>
                             <label>
-                                <input type="checkbox" id="extra-hours" value="300">
+                                <input type="checkbox" id="extra-hours" value="250">
                                 Extra Hours (5hrs @ $50/hr)
                             </label>
+                        </div>
+                    </div>
+
+                    <div class="complexity-slider-group">
+                        <label for="complexity-slider">Project Complexity:</label>
+                        <input type="range" id="complexity-slider" min="85" max="115" value="100" step="5">
+                        <div class="complexity-labels">
+                            <span>Simple (-15%)</span>
+                            <span>Standard</span>
+                            <span>Complex (+15%)</span>
                         </div>
                     </div>
 
                     <div class="calculator-results">
                         <div class="result-item">
                             <span>One-time Cost:</span>
-                            <span id="one-time-cost">$325</span>
+                            <span id="one-time-cost">Select a project type</span>
                         </div>
                         <div class="result-item">
                             <span>Monthly Cost:</span>
@@ -197,57 +180,64 @@
         </div>
     </section>
 
-    <!-- Templates Section -->
-    <section class="templates">
+    <!-- Project Type Section -->
+    <section class="project-type">
         <div class="container">
-            <h2>Templates</h2>
-            <div class="templates-grid">
-                <div class="template-card" onclick="contactWithTemplate('Restaurant QR Menu')">
-                    <h3>Restaurant QR Menu</h3>
-                    <p>Ready-to-use digital menu template</p>
+            <h2>Project Type</h2>
+            <p class="section-description">Choose your project type to get started. This helps me understand your needs and provide accurate pricing.</p>
+            <div class="project-type-grid">
+                <div class="project-type-card" data-project-type="Phone-Friendly Menu" onclick="selectProjectType(this, 'Phone-Friendly Menu')">
+                    <h3>Phone-Friendly Menu</h3>
+                    <p>Digital menus with QR codes for restaurants and cafes</p>
                 </div>
-                <div class="template-card" onclick="contactWithTemplate('Retail Calculator')">
-                    <h3>Retail Calculator</h3>
-                    <p>Product pricing and quantity calculator</p>
+                <div class="project-type-card" data-project-type="Quick Quote Tool" onclick="selectProjectType(this, 'Quick Quote Tool')">
+                    <h3>Quick Quote Tool</h3>
+                    <p>Custom calculators for pricing and estimates</p>
                 </div>
-                <div class="template-card" onclick="contactWithTemplate('Service Estimator')">
-                    <h3>Service Estimator</h3>
-                    <p>Cost estimation tool for services</p>
+                <div class="project-type-card" data-project-type="Play-for-Perks Game" onclick="selectProjectType(this, 'Play-for-Perks Game')">
+                    <h3>Play-for-Perks Game</h3>
+                    <p>Interactive games for customer engagement</p>
                 </div>
-                <div class="template-card" onclick="contactWithTemplate('Loyalty Game')">
-                    <h3>Loyalty Game</h3>
-                    <p>Customer engagement mini-game</p>
+                <div class="project-type-card" data-project-type="Premium Custom" onclick="selectProjectType(this, 'Premium Custom')">
+                    <h3>Premium Custom</h3>
+                    <p>Fully customized solution built from scratch</p>
                 </div>
-                <div class="template-card" onclick="contactWithTemplate('Event RSVP')">
-                    <h3>Event RSVP</h3>
-                    <p>Simple event registration system</p>
+                <div class="project-type-card" data-project-type="Print-Ready Logo Pack" onclick="selectProjectType(this, 'Print-Ready Logo Pack')">
+                    <h3>Print-Ready Logo Pack</h3>
+                    <p>Professional logo optimization and brand assets</p>
                 </div>
-                <div class="template-card" onclick="contactWithTemplate('Contact Form Plus')">
-                    <h3>Contact Form Plus</h3>
-                    <p>Enhanced contact form with features</p>
+                <div class="project-type-card other-card" data-project-type="Other" onclick="selectProjectType(this, 'Other')">
+                    <h3>Other</h3>
+                    <p>Something else? Describe your project needs</p>
+                    <div class="other-input-container" style="display: none;">
+                        <textarea id="other-description" placeholder="Describe your project needs..." rows="3"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="contact">
+    <section id="contact" class="contact disabled">
         <div class="container">
             <h2>Contact</h2>
+            <div class="contact-disabled-message">
+                <p>👆 Please select a Project Type above to continue</p>
+            </div>
             <form class="contact-form" onsubmit="handleContactSubmit(event)">
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" required disabled>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" required disabled>
                 </div>
                 <div class="form-group">
                     <label for="message">Message:</label>
-                    <textarea id="message" name="message" rows="6" required></textarea>
+                    <textarea id="message" name="message" rows="6" required disabled></textarea>
                 </div>
-                <button type="submit" class="submit-button">Send Message</button>
+                <button type="submit" class="submit-button" disabled>Start a Project</button>
             </form>
             <div class="contact-info">
                 <p>Email: <a href="mailto:hello@gortonsolutions.com">hello@gortonsolutions.com</a></p>
