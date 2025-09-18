@@ -298,6 +298,37 @@ h2 {
     color: #333;
 }
 
+.pricing-info {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.pricing-info h3 {
+    color: #2c5aa0;
+    margin-bottom: 1rem;
+}
+
+.pricing-info h4 {
+    color: #333;
+    margin: 1.5rem 0 1rem 0;
+}
+
+.addon-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.addon-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.addon-list li:last-child {
+    border-bottom: none;
+}
+
 /* Calculator */
 .calculator {
     background: #f8f9fa;
