@@ -368,9 +368,6 @@ function openGame(gameType) {
             case 'orchard-worm':
                 initializeOrchardWormGame();
                 break;
-            case 'coupon-slots':
-                initializeCouponSlotsGame();
-                break;
         }
     }
 }
@@ -601,153 +598,6 @@ function showCoreChaser10PercentCoupon() {
     document.body.appendChild(modal);
 }
 
-// Coupon Slots Game
-function initializeCouponSlotsGame() {
-    const spinBtn = document.getElementById('spin-btn');
-    const coinsLeftEl = document.getElementById('coins-left');
-    const resultEl = document.getElementById('slots-result');
-    const slot1 = document.getElementById('slot-1');
-    const slot2 = document.getElementById('slot-2');
-    const slot3 = document.getElementById('slot-3');
-    
-    if (!spinBtn || !coinsLeftEl || !resultEl) return;
-    
-    // Get or initialize coins left from localStorage
-    let coinsLeft = parseInt(localStorage.getItem('coupon-slots-coins') || '3');
-    const symbols = ['🍎', '🍒', '⭐'];
-    
-    function updateDisplay() {
-        coinsLeftEl.textContent = coinsLeft;
-        localStorage.setItem('coupon-slots-coins', coinsLeft.toString());
-        
-        if (coinsLeft <= 0) {
-            spinBtn.disabled = true;
-            spinBtn.textContent = 'No Coins Left';
-            if (!resultEl.textContent.includes('WIN')) {
-                resultEl.textContent = 'Better luck next time!';
-            }
-        } else {
-            spinBtn.textContent = `🪙 SPIN (${coinsLeft} Coin${coinsLeft !== 1 ? 's' : ''} Left)`;
-        }
-    }
-    
-    function showCouponModal() {
-        // Create a simple modal for the coupon
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
-            align-items: center; justify-content: center;
-        `;
-        
-        const couponCode = 'DEMO10-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-        
-        modal.innerHTML = `
-            <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 400px;">
-                <h3 style="color: #2c5aa0; margin-top: 0;">🎉 Congratulations! 🎉</h3>
-                <p>You've won a <strong>10% OFF</strong> coupon!</p>
-                <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; margin: 1rem 0;">
-                    <strong style="font-size: 1.2rem; color: #28a745;">${couponCode}</strong>
-                </div>
-                <button onclick="navigator.clipboard.writeText('${couponCode}').then(() => alert('Coupon code copied!'))" 
-                        style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-right: 1rem; cursor: pointer;">
-                    Copy Code
-                </button>
-                <button onclick="this.parentElement.parentElement.remove()" 
-                        style="background: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
-                    Close
-                </button>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-    }
-    
-    function spin() {
-        if (coinsLeft <= 0) return;
-        
-        const isLastCoin = coinsLeft === 1;
-        coinsLeft--;
-        resultEl.textContent = 'Spinning...';
-        
-        // Animate slots with longer sequence (~5 seconds)
-        let spins = 0;
-        const maxSpins = 50; // Longer animation
-        
-        const spinInterval = setInterval(() => {
-            if (!isLastCoin) {
-                // Regular random spin
-                slot1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-                slot2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-                slot3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            } else {
-                // Last coin - gradually move toward a match
-                if (spins < maxSpins - 10) {
-                    slot1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-                    slot2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-                    slot3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-                } else {
-                    // Force a match in the last few spins
-                    const winSymbol = symbols[0]; // 🍎
-                    slot1.textContent = winSymbol;
-                    slot2.textContent = winSymbol;
-                    slot3.textContent = winSymbol;
-                }
-            }
-            
-            spins++;
-            if (spins >= maxSpins) {
-                clearInterval(spinInterval);
-                // Stop reels in sequence
-                setTimeout(() => checkResult(), 200);
-            }
-        }, 100);
-        
-        gameIntervals.push(spinInterval);
-    }
-    
-    function checkResult() {
-        const symbol1 = slot1.textContent;
-        const symbol2 = slot2.textContent;
-        const symbol3 = slot3.textContent;
-        
-        if (symbol1 === symbol2 && symbol2 === symbol3) {
-            resultEl.innerHTML = '🎉 <strong>WIN!</strong> 10% OFF Coupon! 🎉';
-            resultEl.style.color = '#FFD700';
-            spinBtn.disabled = true;
-            spinBtn.textContent = 'You Won!';
-            
-            // Show coupon modal
-            setTimeout(showCouponModal, 1000);
-        } else if (coinsLeft === 0) {
-            resultEl.textContent = 'Game Over - No more coins!';
-            resultEl.style.color = '#e74c3c';
-        } else {
-            resultEl.textContent = 'Try again!';
-            resultEl.style.color = '#666';
-        }
-        
-        updateDisplay();
-    }
-    
-    function resetGame() {
-        coinsLeft = 3;
-        localStorage.setItem('coupon-slots-coins', '3');
-        resultEl.textContent = '';
-        resultEl.style.color = '#666';
-        slot1.textContent = '🍎';
-        slot2.textContent = '🍒';
-        slot3.textContent = '⭐';
-        spinBtn.disabled = false;
-        updateDisplay();
-    }
-    
-    spinBtn.addEventListener('click', spin);
-    
-    // Initialize game
-    resetGame();
-}
-
 // Smooth scrolling for navigation
 function initializeSmoothScrolling() {
     const navLinks = document.querySelectorAll('.nav a[href^="#"]');
@@ -889,6 +739,25 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(addScrollAnimations, 100);
 });
 
+// Arcade Zone Toggle Function
+function toggleArcadeZone() {
+    const arcadeZone = document.getElementById('arcade-zone');
+    const expandIndicator = document.querySelector('.expand-indicator');
+    
+    if (arcadeZone.classList.contains('collapsed')) {
+        arcadeZone.classList.remove('collapsed');
+        arcadeZone.classList.add('expanded');
+        expandIndicator.style.transform = 'rotate(180deg)';
+    } else {
+        arcadeZone.classList.remove('expanded');
+        arcadeZone.classList.add('collapsed');
+        expandIndicator.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Make toggleArcadeZone available globally
+window.toggleArcadeZone = toggleArcadeZone;
+
 // Export functions for potential external use
 window.GortonSolutions = {
     updatePricingCalculator,
@@ -896,6 +765,7 @@ window.GortonSolutions = {
     contactWithTemplate,
     handleContactSubmit,
     selectProjectType,
+    toggleArcadeZone,
     pricingData,
     selectedProjectType
 };
