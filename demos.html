@@ -29,10 +29,15 @@
             <h1>Interactive Demos</h1>
             <p class="section-description">Try out examples of the digital tools I create for small businesses.</p>
             
+            <!-- Work in Progress Note -->
+            <div class="work-in-progress-note">
+                <p>💡 <strong>Note:</strong> All demos are works in progress and can be personalized to your specific business needs.</p>
+            </div>
+            
             <div class="demo-grid">
                 <div class="demo-item">
-                    <h3>🕹️ Arcade Zone Info Hub</h3>
-                    <div class="arcade-info">
+                    <h3 class="arcade-zone-header" onclick="toggleArcadeZone()">🕹️ Arcade Zone Info Hub <span class="expand-indicator">▼</span></h3>
+                    <div class="arcade-info collapsed" id="arcade-zone">
                         <div class="arcade-header">
                             <h4>🎮 Welcome to Pixel Palace! 🎮</h4>
                         </div>
@@ -58,9 +63,30 @@
                             • High Score Sunday Challenge</p>
                         </div>
                         
+                        <div class="arcade-section expanded-content">
+                            <h5>🎮 Featured Games</h5>
+                            <p>• Classic Pacman & Galaga<br>
+                            • Street Fighter Tournament Setup<br>
+                            • Dance Dance Revolution<br>
+                            • Pinball Machines (6 different themes)</p>
+                        </div>
+                        
+                        <div class="arcade-section expanded-content">
+                            <h5>🍕 Snack Bar</h5>
+                            <p>• Fresh Pizza Slices: $3.50<br>
+                            • Nachos & Cheese: $4.00<br>
+                            • Soft Drinks: $2.00<br>
+                            • Energy Drinks: $3.00</p>
+                        </div>
+                        
                         <div class="arcade-footer">
                             <p>🥤 Grab a soda, challenge your friends, and save your high score! 🏆</p>
                         </div>
+                        
+                        <!-- Floating animations for expanded state -->
+                        <div class="floating-animation coin-animation">🪙</div>
+                        <div class="floating-animation joystick-animation">🕹️</div>
+                        <div class="floating-animation star-animation">⭐</div>
                     </div>
                     <p class="demo-description">Fun, themed content pages that engage customers</p>
                 </div>
@@ -150,17 +176,16 @@
                                 </div>
                             </div>
                             
-                            <div class="game-card" id="coupon-slots-card">
+                            <div class="game-card" id="marble-shooter-card">
                                 <div class="game-card-content">
-                                    <div class="game-icon">🎰💰</div>
-                                    <h4>Coupon Slots</h4>
-                                    <p>Slot machine coupon generator - 3 coin attempts to win!</p>
-                                    <button class="play-game-btn" onclick="openGame('coupon-slots')">Play Game</button>
+                                    <div class="game-icon">🎯🔵</div>
+                                    <h4>Marble Shooter</h4>
+                                    <p>Classic bubble shooter with marble physics and satisfying gameplay</p>
+                                    <button class="play-game-btn" onclick="window.open('https://nerdrage127.github.io/Marble-shooter/', '_blank')">Play Game</button>
                                 </div>
                                 <div class="game-hover-animation">
-                                    <div class="slot-reel reel-1"></div>
-                                    <div class="slot-reel reel-2"></div>
-                                    <div class="slot-reel reel-3"></div>
+                                    <div class="marble-trail"></div>
+                                    <div class="target-sparkle"></div>
                                 </div>
                             </div>
                             
@@ -207,28 +232,6 @@
             </div>
             <div class="game-instructions">
                 <p>🐛 Use arrow keys to move the worm and collect fruit! Avoid hitting walls or yourself!</p>
-            </div>
-        </div>
-        
-        <!-- Coupon Slots Game -->
-        <div class="fullscreen-game" id="coupon-slots-game" style="display: none;">
-            <div class="game-header">
-                <h2>🎰 Coupon Slots</h2>
-                <div class="game-score">Coins Left: <span id="coins-left">3</span></div>
-            </div>
-            <div class="slots-machine">
-                <div class="slot-display">
-                    <div class="slot-reel-container">
-                        <div class="slot-reel" id="slot-1">🍎</div>
-                        <div class="slot-reel" id="slot-2">🍒</div>
-                        <div class="slot-reel" id="slot-3">⭐</div>
-                    </div>
-                </div>
-                <div class="slots-result" id="slots-result"></div>
-                <button id="spin-btn" class="game-btn">🪙 SPIN (1 Coin)</button>
-            </div>
-            <div class="game-instructions">
-                <p>🎰 Match 3 symbols to win a coupon! You have 3 coin attempts.</p>
             </div>
         </div>
     </div>

@@ -321,6 +321,186 @@ h2 {
     border-radius: 4px;
 }
 
+/* Work in Progress Note */
+.work-in-progress-note {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.work-in-progress-note p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Collapsible Arcade Zone */
+.arcade-zone-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.3s ease;
+    user-select: none;
+}
+
+.arcade-zone-header:hover {
+    color: #2c5aa0;
+}
+
+.expand-indicator {
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.arcade-info.collapsed {
+    max-height: 100px;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    position: relative;
+}
+
+.arcade-info.collapsed .expanded-content {
+    display: none;
+}
+
+.arcade-info.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(transparent, rgba(102, 126, 234, 0.8));
+    pointer-events: none;
+}
+
+.arcade-info.expanded {
+    max-height: 1000px;
+    transition: max-height 0.5s ease;
+    position: relative;
+}
+
+.arcade-info.expanded .expand-indicator {
+    transform: rotate(180deg);
+}
+
+.arcade-info.expanded .expanded-content {
+    display: block;
+}
+
+.expanded-content {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease 0.2s, transform 0.3s ease 0.2s;
+    display: none;
+}
+
+.arcade-info.expanded .expanded-content {
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+}
+
+/* Floating Animations */
+.floating-animation {
+    position: absolute;
+    font-size: 1.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.arcade-info.expanded .floating-animation {
+    opacity: 0.7;
+}
+
+.coin-animation {
+    top: 20px;
+    right: 20px;
+    animation: floatCoin 3s ease-in-out infinite;
+}
+
+.joystick-animation {
+    top: 50%;
+    left: 20px;
+    animation: floatJoystick 4s ease-in-out infinite;
+}
+
+.star-animation {
+    bottom: 20px;
+    right: 50px;
+    animation: floatStar 3.5s ease-in-out infinite;
+}
+
+@keyframes floatCoin {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(180deg); }
+}
+
+@keyframes floatJoystick {
+    0%, 100% { transform: translateX(0px) scale(1); }
+    25% { transform: translateX(10px) scale(1.1); }
+    75% { transform: translateX(-10px) scale(0.9); }
+}
+
+@keyframes floatStar {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+    50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+}
+
+/* Marble Shooter Animation */
+.marble-trail {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, #4A90E2, #2E5C8A);
+    border-radius: 50%;
+    animation: marbleShoot 2s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+}
+
+.target-sparkle {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 15px;
+    height: 15px;
+    background: radial-gradient(circle, #FFD700, #FFA500);
+    border-radius: 50%;
+    animation: targetPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes marbleShoot {
+    0% { 
+        transform: translate(20px, 70px) scale(1); 
+        opacity: 1; 
+    }
+    70% { 
+        transform: translate(120px, 30px) scale(0.8); 
+        opacity: 0.8; 
+    }
+    100% { 
+        transform: translate(140px, 25px) scale(0.6); 
+        opacity: 0; 
+    }
+}
+
+@keyframes targetPulse {
+    0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); 
+    }
+    50% { 
+        transform: scale(1.4); 
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); 
+    }
+}
+
 .game-placeholder {
     text-align: center;
 }
@@ -744,44 +924,6 @@ h2 {
     50% { opacity: 1; transform: scale(1.2); }
 }
 
-/* Coupon Slots Animation */
-.slot-reel {
-    position: absolute;
-    width: 30px;
-    height: 40px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    animation: slotSpin 1s ease-in-out infinite;
-}
-
-.reel-1 {
-    left: 30px;
-    top: 50px;
-    animation-delay: 0s;
-}
-
-.reel-2 {
-    left: 70px;
-    top: 50px;
-    animation-delay: 0.2s;
-}
-
-.reel-3 {
-    left: 110px;
-    top: 50px;
-    animation-delay: 0.4s;
-}
-
-@keyframes slotSpin {
-    0% { transform: rotateX(0deg); }
-    50% { transform: rotateX(180deg); }
-    100% { transform: rotateX(360deg); }
-}
-
 /* Cosmic Drift Animation */
 .cosmic-stars {
     position: absolute;
@@ -906,33 +1048,6 @@ h2 {
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 1rem;
-}
-
-.slot-reel-container {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.slot-reel {
-    background: white;
-    color: #333;
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.slots-result {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 1rem 0;
-    min-height: 1.5rem;
 }
 
 /* Footer */
